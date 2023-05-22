@@ -18,8 +18,14 @@ class TodoHeader extends StatelessWidget {
         ),
         BlocBuilder<ActiveTodoCountCubit, ActiveTodoCountState>(
           builder: (context, state) {
-            return Text('${state.activeTodoCount} Items Left',
-                style: TextStyle(color: Colors.red));
+            return Text(
+                state.activeTodoCount == 0
+                    ? 'All Task is Done'
+                    : '${state.activeTodoCount} Items Left',
+                style: TextStyle(
+                    color: state.activeTodoCount == 0
+                        ? Colors.green
+                        : Colors.red));
           },
         ),
         // Text(

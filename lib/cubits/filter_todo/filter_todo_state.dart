@@ -5,14 +5,15 @@ part of 'filter_todo_cubit.dart';
 class FilterTodoListState extends Equatable {
   // Create a variable of list from
   // Todo models that we created before
-  List<Todo> todos;
+  final List<Todo> todos;
   FilterTodoListState({
     required this.todos,
   });
 
-  factory FilterTodoListState.initial() {
-    return FilterTodoListState(todos: []);
-  }
+  
+  // factory FilterTodoListState.initial() {
+  //   return FilterTodoListState(todos: []);
+  // }
 
   @override
   List<Object> get props => [todos];

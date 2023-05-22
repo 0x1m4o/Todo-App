@@ -23,5 +23,5 @@ class TodoSearchState extends Equatable {
   }
 
   @override
-  bool get stringify => true;
+  String toString() => 'TodoSearchState(searchTerm: $searchTerm)';
 }

@@ -22,7 +22,7 @@ class TodoListCubit extends Cubit<TodoListState> {
     // If it is the same so we can update the value of it.
     final newTodos = state.todos.map((Todo todo) {
       if (todo.id == id) {
-        return Todo(id: id, desc: updateDesc, completed: true);
+        return Todo(id: id, desc: updateDesc, completed: todo.completed);
       }
       return todo;
     }).toList();
@@ -33,7 +33,8 @@ class TodoListCubit extends Cubit<TodoListState> {
     // Same as Updatedata above, but we make the value of completed reverse.
     final newTodos = state.todos.map((Todo todo) {
       if (todo.id == id) {
-        Todo(id: id, desc: todo.desc, completed: !todo.completed);
+        print('Todo ID : ${todo.id}');
+        return Todo(id: id, desc: todo.desc, completed: !todo.completed);
       }
       return todo;
     }).toList();
@@ -42,7 +43,7 @@ class TodoListCubit extends Cubit<TodoListState> {
 
   void removeData(Todo removeTodo) {
     // Where Todo is return to true that todo is in the value
-    // But we filter the same id is not inserted/removed from list.  
+    // But we filter the same id is not inserted/removed from list.
     final newTodos =
         state.todos.where((Todo todo) => todo.id != removeTodo.id).toList();
 

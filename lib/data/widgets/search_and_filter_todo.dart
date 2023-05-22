@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app_bloc/cubits/todo_filter/todo_filter_cubit.dart';
+import 'package:todo_app_bloc/cubits/todo_list/todo_list_cubit.dart';
 import 'package:todo_app_bloc/cubits/todo_search/todo_search_cubit.dart';
 import 'package:todo_app_bloc/models/todo_model.dart';
 
@@ -16,8 +17,8 @@ class SearchAndFilter extends StatelessWidget {
               label: Text('Search Task'),
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.search)),
-          onChanged: (String search) {
-            if (search.isNotEmpty) {
+          onChanged: (String? search) {
+            if (search != null) {
               BlocProvider.of<TodoSearchCubit>(context).setSearchTerm(search);
             }
           },
@@ -28,15 +29,18 @@ class SearchAndFilter extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child: filterButton(context, Filter.all)),
+            Expanded(
+              flex: 3,
+              child: filterButton(context, Filter.all),
+            ),
             SizedBox(
               width: 5,
             ),
-            Expanded(child: filterButton(context, Filter.active)),
+            Expanded(flex: 3, child: filterButton(context, Filter.active)),
             SizedBox(
               width: 5,
             ),
-            Expanded(child: filterButton(context, Filter.completed)),
+            Expanded(flex: 4, child: filterButton(context, Filter.completed)),
           ],
         )
       ],
@@ -45,7 +49,9 @@ class SearchAndFilter extends StatelessWidget {
 }
 
 Widget filterButton(BuildContext context, Filter filter) {
+  final todos = context.watch<TodoListCubit>().state.todos;
   return Container(
+    alignment: Alignment.center,
     decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: textColor(context, filter)))),
     child: TextButton(
@@ -56,12 +62,11 @@ Widget filterButton(BuildContext context, Filter filter) {
           context.read<TodoFilterCubit>().changeFilter(filter);
         },
         child: Text(
-          filter == Filter.all
-              ? 'All'
-              : filter == Filter.active
-                  ? 'Active'
-                  : 'Completed',
-          style: TextStyle(color: textColor(context, filter)),
+          "${filter == Filter.all ? 'All (${todos.length})' : filter == Filter.active ? 'Active (${todos.where((value) => !value.completed).length.toString()})' : 'Completed (${todos.where((value) => value.completed).length.toString()})'}",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: textColor(context, filter),
+          ),
         )),
   );
 }

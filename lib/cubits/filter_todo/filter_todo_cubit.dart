@@ -22,12 +22,15 @@ class FilterTodoCubit extends Cubit<FilterTodoListState> {
   late StreamSubscription todoFilterStreamSubscription;
   late StreamSubscription todoSearchStreamSubscription;
 
+  List<Todo> initialTodoCubit;
+
   // In here we make the parameters so we can use the value later
   FilterTodoCubit({
+    required this.initialTodoCubit,
     required this.todoListCubit,
     required this.todoFilterCubit,
     required this.todoSearchCubit,
-  }) : super(FilterTodoListState.initial()) {
+  }) : super(FilterTodoListState(todos: initialTodoCubit)) {
     // We created subscription in every cubit stream.
     todoFilterStreamSubscription =
         todoFilterCubit.stream.listen((TodoFilterState todoFilterState) {
@@ -50,13 +53,13 @@ class FilterTodoCubit extends Cubit<FilterTodoListState> {
 
   void setFilteredTodo() {
     // Created a new list of Todo to overrides the todoList
-    List<Todo> _filteredTodo;
+    List<Todo> filteredTodo;
     // Created a switch case for different filter.
     switch (todoFilterCubit.state.filter) {
       // If the Filter tab is 'active'.
       case Filter.active:
         // We filter out the todo that do not completed
-        _filteredTodo = todoListCubit.state.todos
+        filteredTodo = todoListCubit.state.todos
             .where((Todo todos) => !todos.completed)
             .toList();
         break;
@@ -64,7 +67,7 @@ class FilterTodoCubit extends Cubit<FilterTodoListState> {
       // If the Filter tab is 'completed'.
       case Filter.completed:
         // We filter out the todo that completed
-        _filteredTodo = todoListCubit.state.todos
+        filteredTodo = todoListCubit.state.todos
             .where((Todo todos) => todos.completed)
             .toList();
         break;
@@ -73,19 +76,27 @@ class FilterTodoCubit extends Cubit<FilterTodoListState> {
       // We include all of todo list.
       case Filter.all:
       default:
-        _filteredTodo = todoListCubit.state.todos;
+        filteredTodo = todoListCubit.state.todos;
         break;
     }
 
     // After that we make sure that is textfield is not empty. If it is not empty. We filter again based on the value on the textfields.
     if (todoSearchCubit.state.searchTerm.isNotEmpty) {
-      _filteredTodo = _filteredTodo
+      filteredTodo = filteredTodo
           .where((Todo todo) => todo.desc
               .toLowerCase()
-              .contains(todoSearchCubit.state.searchTerm))
+              .contains(todoSearchCubit.state.searchTerm.toLowerCase()))
           .toList();
     }
 
-    emit(state.copyWith(todos: _filteredTodo));
+    emit(state.copyWith(todos: filteredTodo));
+  }
+
+  @override
+  Future<void> close() {
+    todoFilterStreamSubscription.cancel();
+    todoListStreamSubscription.cancel();
+    todoSearchStreamSubscription.cancel();
+    return super.close();
   }
 }
