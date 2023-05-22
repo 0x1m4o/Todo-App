@@ -8,13 +8,18 @@ class TodoListCubit extends Cubit<TodoListState> {
   TodoListCubit() : super(TodoListState.initial());
 
   void addData(String newDesc) {
+    // Here we create a new Todo member.
     final newTodo = Todo(desc: newDesc);
+
+    // Add the Todo that created before to the all state todo list
     final newTodos = [...state.todos, newTodo];
 
     emit(state.copyWith(todos: newTodos));
   }
 
   void updateData(String id, String updateDesc) {
+    // First we need to find from the list the same Id as the clicked one from parameters sends.
+    // If it is the same so we can update the value of it.
     final newTodos = state.todos.map((Todo todo) {
       if (todo.id == id) {
         return Todo(id: id, desc: updateDesc, completed: true);
@@ -25,6 +30,7 @@ class TodoListCubit extends Cubit<TodoListState> {
   }
 
   void completedData(String id) {
+    // Same as Updatedata above, but we make the value of completed reverse.
     final newTodos = state.todos.map((Todo todo) {
       if (todo.id == id) {
         Todo(id: id, desc: todo.desc, completed: !todo.completed);
@@ -35,6 +41,8 @@ class TodoListCubit extends Cubit<TodoListState> {
   }
 
   void removeData(Todo removeTodo) {
+    // Where Todo is return to true that todo is in the value
+    // But we filter the same id is not inserted/removed from list.  
     final newTodos =
         state.todos.where((Todo todo) => todo.id != removeTodo.id).toList();
 

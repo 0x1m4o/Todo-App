@@ -3,6 +3,8 @@
 part of 'todo_list_cubit.dart';
 
 class TodoListState extends Equatable {
+  // Create a variable of list from 
+  // Todo models that we created before
   List<Todo> todos;
   TodoListState({
     required this.todos,
