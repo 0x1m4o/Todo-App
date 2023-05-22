@@ -11,12 +11,15 @@ class ActiveTodoCountCubit extends Cubit<ActiveTodoCountState> {
   // First we create another cubit so we can use this later.
   final TodoListCubit todoListCubit;
 
+  final int activeTodoCubit;
+
   // After that we create a stream subscription variable so we can cancel if we don't need it again
   late final StreamSubscription todoStreamSubscription;
 
   // Ask the TodoListCubit as parameter so we can use the value later.
-  ActiveTodoCountCubit({required this.todoListCubit})
-      : super(ActiveTodoCountState.initial()) {
+  ActiveTodoCountCubit(
+      {required this.activeTodoCubit, required this.todoListCubit})
+      : super(ActiveTodoCountState(activeTodoCount: activeTodoCubit)) {
     // We listen the todo list stream and filter the value completed only
     todoStreamSubscription = todoListCubit.stream.listen((TodoListState todo) {
       final int activeCurrentTodo =
