@@ -4,12 +4,14 @@ import 'package:todo_app_bloc/cubits/todo_filter/todo_filter_cubit.dart';
 import 'package:todo_app_bloc/cubits/todo_list/todo_list_cubit.dart';
 import 'package:todo_app_bloc/cubits/todo_search/todo_search_cubit.dart';
 import 'package:todo_app_bloc/models/todo_model.dart';
+import 'package:todo_app_bloc/utils/debounce.dart';
 
 class SearchAndFilter extends StatelessWidget {
   const SearchAndFilter({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final debounce = Debounce(miliseconds: 1000);
     return Column(
       children: [
         TextField(
@@ -19,7 +21,9 @@ class SearchAndFilter extends StatelessWidget {
               prefixIcon: Icon(Icons.search)),
           onChanged: (String? search) {
             if (search != null) {
-              BlocProvider.of<TodoSearchCubit>(context).setSearchTerm(search);
+              debounce.run(() {
+                BlocProvider.of<TodoSearchCubit>(context).setSearchTerm(search);
+              });
             }
           },
         ),
