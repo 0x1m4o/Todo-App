@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app_bloc/cubits/filter_todo/filter_todo_cubit.dart';
 import 'package:todo_app_bloc/cubits/todo_filter/todo_filter_cubit.dart';
 import 'package:todo_app_bloc/cubits/todo_list/todo_list_cubit.dart';
+import 'package:todo_app_bloc/cubits/todo_search/todo_search_cubit.dart';
 import 'package:todo_app_bloc/models/todo_model.dart';
 
 class ShowTodo extends StatelessWidget {
@@ -12,54 +13,82 @@ class ShowTodo extends StatelessWidget {
   Widget build(BuildContext context) {
     final todos = context.watch<FilterTodoCubit>().state.todos;
 
-    if (todos.length == 0) {
-      return Center(
-        child: Text('No Data'),
-      );
-    } else {
-      return ListView.separated(
-        primary: false,
-        shrinkWrap: true,
-        itemCount: todos.length,
-        itemBuilder: (context, index) {
-          return Dismissible(
-              onDismissed: (_) {
-                context.read<TodoListCubit>().removeData(todos[index]);
-              },
-              confirmDismiss: (_) {
-                return showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('Delete Task'),
-                      content:
-                          Text('Are you sure wan\'t to delete this task ?'),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context, false);
-                            },
-                            child: Text('Cancel')),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context, true);
-                            },
-                            child: Text('Delete'))
-                      ],
-                    );
-                  },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<TodoListCubit, TodoListState>(
+          listener: (context, state) => context
+              .read<FilterTodoCubit>()
+              .setFilteredTodo(
+                  context.read<TodoFilterCubit>().state.filter,
+                  state.todos,
+                  context.read<TodoSearchCubit>().state.searchTerm),
+        ),
+        BlocListener<TodoFilterCubit, TodoFilterState>(
+          listener: (context, state) => context
+              .read<FilterTodoCubit>()
+              .setFilteredTodo(
+                  state.filter,
+                  context.read<TodoListCubit>().state.todos,
+                  context.read<TodoSearchCubit>().state.searchTerm),
+        ),
+        BlocListener<TodoSearchCubit, TodoSearchState>(
+          listener: (context, state) => context
+              .read<FilterTodoCubit>()
+              .setFilteredTodo(context.read<TodoFilterCubit>().state.filter,
+                  context.read<TodoListCubit>().state.todos, state.searchTerm),
+        ),
+      ],
+      child: (todos.length == 0)
+          ? StatefulBuilder(
+              builder: (context, setState) {
+                return Center(
+                  child: Text('No Data'),
                 );
               },
-              background: showBackground(0),
-              secondaryBackground: showBackground(1),
-              key: ValueKey(todos[index].id),
-              child: TodoItem(todo: todos[index]));
-        },
-        separatorBuilder: (context, index) => Divider(
-          color: Colors.grey,
-        ),
-      );
-    }
+            )
+          : ListView.separated(
+              primary: false,
+              shrinkWrap: true,
+              itemCount: todos.length,
+              itemBuilder: (context, index) {
+                return Dismissible(
+                    onDismissed: (_) {
+                      context.read<TodoListCubit>().removeData(todos[index]);
+                    },
+                    confirmDismiss: (_) {
+                      return showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('Delete Task'),
+                            content: Text(
+                                'Are you sure wan\'t to delete this task ?'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, false);
+                                  },
+                                  child: Text('Cancel')),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, true);
+                                  },
+                                  child: Text('Delete'))
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    background: showBackground(0),
+                    secondaryBackground: showBackground(1),
+                    key: ValueKey(todos[index].id),
+                    child: TodoItem(todo: todos[index]));
+              },
+              separatorBuilder: (context, index) => Divider(
+                color: Colors.grey,
+              ),
+            ),
+    );
   }
 }
 
