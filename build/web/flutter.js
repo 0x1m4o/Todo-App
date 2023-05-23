@@ -2,10 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-if (!_flutter) {
-  var _flutter = {};
+if (!flutter) {
+  var flutter = {};
 }
-_flutter.loader = null;
+flutter.loader = null;
 
 (function () {
   "use strict";
@@ -58,11 +58,11 @@ _flutter.loader = null;
     constructor(validPatterns, policyName = "flutter-js") {
       const patterns = validPatterns || [
         /\.dart\.js$/,
-        /^flutter_service_worker.js$/
+        /^flutter_service_worker.js$/,
       ];
       if (window.trustedTypes) {
         this.policy = trustedTypes.createPolicy(policyName, {
-          createScriptURL: function(url) {
+          createScriptURL: function (url) {
             const parsed = new URL(url, window.location);
             const file = parsed.pathname.split("/").pop();
             const matches = patterns.some((pattern) => pattern.test(file));
@@ -71,8 +71,12 @@ _flutter.loader = null;
             }
             console.error(
               "URL rejected by TrustedTypes policy",
-              policyName, ":", url, "(download prevented)");
-          }
+              policyName,
+              ":",
+              url,
+              "(download prevented)"
+            );
+          },
         });
       }
     }
@@ -238,7 +242,7 @@ _flutter.loader = null;
      * Resolves the promise created by loadEntrypoint, and calls the `onEntrypointLoaded`
      * function supplied by the user (if needed).
      *
-     * Called by Flutter through `_flutter.loader.didCreateEngineInitializer` method,
+     * Called by Flutter through `flutter.loader.didCreateEngineInitializer` method,
      * which is bound to the correct instance of the FlutterEntrypointLoader by
      * the FlutterLoader object.
      *
@@ -250,7 +254,7 @@ _flutter.loader = null;
         // Remove the resolver after the first time, so Flutter Web can hot restart.
         this._didCreateEngineInitializerResolve = null;
         // Make the engine revert to "auto" initialization on hot restart.
-        delete _flutter.loader.didCreateEngineInitializer;
+        delete flutter.loader.didCreateEngineInitializer;
       }
       if (typeof this._onEntrypointLoaded === "function") {
         this._onEntrypointLoaded(engineInitializer);
@@ -317,7 +321,7 @@ _flutter.loader = null;
   }
 
   /**
-   * The public interface of _flutter.loader. Exposes two methods:
+   * The public interface of flutter.loader. Exposes two methods:
    * * loadEntrypoint (which coordinates the default Flutter web loading procedure)
    * * didCreateEngineInitializer (which is called by Flutter to notify that its
    *                              Engine is ready to be initialized)
@@ -341,7 +345,7 @@ _flutter.loader = null;
       // (and dynamically imported from a module if not present).
       const serviceWorkerLoader = new FlutterServiceWorkerLoader();
       serviceWorkerLoader.setTrustedTypesPolicy(flutterTT.policy);
-      await serviceWorkerLoader.loadServiceWorker(serviceWorker).catch(e => {
+      await serviceWorkerLoader.loadServiceWorker(serviceWorker).catch((e) => {
         // Regardless of what happens with the injection of the SW, the show must go on
         console.warn("Exception while loading service worker:", e);
       });
@@ -357,6 +361,5 @@ _flutter.loader = null;
     }
   }
 
-  _flutter.loader = new FlutterLoader();
+  flutter.loader = new FlutterLoader();
 })();
-
