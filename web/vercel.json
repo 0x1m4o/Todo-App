@@ -1,0 +1,5 @@
+{
+  "version": 2,
+  "name": "todo-cubit-web",
+  "rewrites": [{ "source": "/:a*", "destination": "/" }]
+}
