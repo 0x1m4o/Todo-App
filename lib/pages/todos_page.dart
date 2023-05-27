@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app_bloc/data/widgets/create_todo.dart';
-import 'package:todo_app_bloc/data/widgets/search_and_filter_todo.dart';
-import 'package:todo_app_bloc/data/widgets/show_todo.dart';
-import 'package:todo_app_bloc/data/widgets/todo_header.dart';
+import 'package:todo_app_cubit/data/widgets/create_todo.dart';
+import 'package:todo_app_cubit/data/widgets/search_and_filter_todo.dart';
+import 'package:todo_app_cubit/data/widgets/show_todo.dart';
+import 'package:todo_app_cubit/data/widgets/todo_header.dart';
 
 class TodosPage extends StatelessWidget {
   const TodosPage({super.key});

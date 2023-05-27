@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app_bloc/cubits/active_todo_count/active_todo_count_dart_cubit.dart';
-import 'package:todo_app_bloc/cubits/filter_todo/filter_todo_cubit.dart';
-import 'package:todo_app_bloc/cubits/todo_filter/todo_filter_cubit.dart';
-import 'package:todo_app_bloc/cubits/todo_list/todo_list_cubit.dart';
-import 'package:todo_app_bloc/cubits/todo_search/todo_search_cubit.dart';
-import 'package:todo_app_bloc/pages/todos_page.dart';
+import 'package:todo_app_cubit/cubits/active_todo_count/active_todo_count_dart_cubit.dart';
+import 'package:todo_app_cubit/cubits/filter_todo/filter_todo_cubit.dart';
+import 'package:todo_app_cubit/cubits/todo_filter/todo_filter_cubit.dart';
+import 'package:todo_app_cubit/cubits/todo_list/todo_list_cubit.dart';
+import 'package:todo_app_cubit/cubits/todo_search/todo_search_cubit.dart';
+import 'package:todo_app_cubit/pages/todos_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {

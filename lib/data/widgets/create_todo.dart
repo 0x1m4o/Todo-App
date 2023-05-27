@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_app_bloc/cubits/todo_list/todo_list_cubit.dart';
+import 'package:todo_app_cubit/cubits/todo_list/todo_list_cubit.dart';
 
 class CreateTodo extends StatelessWidget {
   CreateTodo({super.key});

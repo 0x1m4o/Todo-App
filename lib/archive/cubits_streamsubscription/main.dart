@@ -4,7 +4,7 @@
 // import './todo_filter/todo_filter_cubit.dart';
 // import './todo_list/todo_list_cubit.dart';
 // import './todo_search/todo_search_cubit.dart';
-// import 'package:todo_app_bloc/pages/todos_page.dart';
+// import 'package:todo_app_cubit/pages/todos_page.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 
 // void main() {
